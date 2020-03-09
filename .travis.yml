@@ -3,5 +3,5 @@ language: bash
 script:
   - bash update.sh
 after_success:
-  - git push https://124c03b74704ef08a6d6392019f1e775c21ac919@github.com/LeiSun-1101/PeppolRuleSet.git HEAD:info
+  - git push https://ff29618783fd52d216d36978dfc4ca0ed62e9e08@github.com/LeiSun-1101/PeppolRuleSet.git HEAD:info
 
