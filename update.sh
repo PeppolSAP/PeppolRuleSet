@@ -57,27 +57,28 @@ commitSi=''
 commitXr=''
 commitPBis3=''
 commitZuv=''
+flag=0
 
 if [ $siFlag -eq 1 ]; then
   commitSi="SimplerInvoicing Updated --> https://github.com/SimplerInvoicing/validation.git"
+  flag=1
 fi
 
 if [ $xrFlag -eq 1 ]; then
   commitXr="xRechnung Updated --> https://github.com/itplr-kosit/xrechnung-schematron.git"
+  flag=1
 fi
 
 if [ $pBis3Flag -eq 1 ]; then
   commitPBis3="Peppol BIS 3 Updated --> https://github.com/OpenPEPPOL/peppol-bis-invoice-3.git"
+  flag=1
 fi
 
 if [ $zuvFlag -eq 1 ]; then
   commitZuv="Zugferd Updated --> https://github.com/ZUGFeRD/ZUV.git"
+  flag=1
 fi
 
-echo $commitSi
-echo $commitXr
-echo $commitPBis3
-
-git commit --amend -m "${commitTitle}" -m "${commitSi}" -m "${commitXr}" -m "${commitPBis3}" -m "${commitZuv}"
-
-git log -1
+if [ $flag -eq 1 ]; then
+    git commit --amend -m "${commitTitle}" -m "${commitSi}" -m "${commitXr}" -m "${commitPBis3}" -m "${commitZuv}"
+fi
