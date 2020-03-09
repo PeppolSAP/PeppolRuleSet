@@ -3,6 +3,6 @@ language: bash
 script:
   - bash update.sh
 after_success:
-  - git push https://LeiSun-1101:$TOKEN@github.com/LeiSun-1101/PeppolRuleSet.git HEAD:i3
+  - git push https://LeiSun-1101:$TOKEN@github.com/LeiSun-1101/PeppolRuleSet.git HEAD:info
 
 
