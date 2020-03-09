@@ -1,3 +1,8 @@
+#!/usr/bin/env sh
+git stash
+git checkout master
+git branch -D fetchAll
+rm -rf temp/*
 git checkout -b fetchAll
 
 # clone simpler invocing repository
@@ -11,7 +16,7 @@ rm -rf ./temp/si
 # clone xRechnung
 rm -rf ./xRechnung/*
 git clone https://github.com/itplr-kosit/xrechnung-schematron.git ./temp/xRechnung
-mv ./temp/xRechnung/validation/schematron/* ./xRechnung
+mv ./temp/xRechnung/validation/schematron/ ./xRechnung
 rm -rf ./temp/xRechnung
 
 
@@ -44,18 +49,26 @@ pBis3Flag=$?
 git diff --quiet HEAD master -- ./Zugferd
 zuvFlag=$?
 
+commitTitle='Peppol Rules Update Summary:'
+commitSi=''
+commitXr=''
+commitPBis3=''
+commitZuv=''
+
 if [ $siFlag -eq 1 ]; then
-  echo "SimplerInvoicing Updated --> https://github.com/SimplerInvoicing/validation.git"
+  commitSi="SimplerInvoicing Updated --> https://github.com/SimplerInvoicing/validation.git"
 fi
 
 if [ $xrFlag -eq 1 ]; then
-  echo "xRechnung Updated --> https://github.com/itplr-kosit/xrechnung-schematron.git"
+  commitXr="xRechnung Updated --> https://github.com/itplr-kosit/xrechnung-schematron.git"
 fi
 
 if [ $pBis3Flag -eq 1 ]; then
-  echo "Peppol BIS 3 Updated --> https://github.com/OpenPEPPOL/peppol-bis-invoice-3.git"
+  commitPBis3="Peppol BIS 3 Updated --> https://github.com/OpenPEPPOL/peppol-bis-invoice-3.git"
 fi
 
 if [ $zuvFlag -eq 1 ]; then
-  echo "Zugferd Updated --> https://github.com/ZUGFeRD/ZUV.git"
+  commitZuv="Zugferd Updated --> https://github.com/ZUGFeRD/ZUV.git"
 fi
+
+git commit --amend -m "${commitTitle}" -m "${commitSi}" -m "${commitXr}" -m "${commitPBis3}" -m "${commitZuv}"
