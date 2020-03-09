@@ -6,29 +6,33 @@ git checkout -b fetchAll
 
 # clone simpler invocing repository
 git clone https://github.com/SimplerInvoicing/validation.git ./temp/si
-rm -rf ./simpler-invoicing/*
+rm -rf ./simpler-invoicing
+mkdir ./simpler-invocing
 mv ./temp/si/schematron ./simpler-invoicing/
 mv ./temp/si/xsl ./simpler-invoicing/
 rm -rf ./temp/si
 
 
 # clone xRechnung
-rm -rf ./xRechnung/*
+rm -rf ./xRechnung
+mkdir xRechnung
 git clone https://github.com/itplr-kosit/xrechnung-schematron.git ./temp/xRechnung
-mv ./temp/xRechnung/validation/schematron/ ./xRechnung
+mv ./temp/xRechnung/validation/schematron ./xRechnung
 rm -rf ./temp/xRechnung
 
 
 # clone peppol-bis
 git clone https://github.com/OpenPEPPOL/peppol-bis-invoice-3.git ./temp/peppolBis3
-rm -rf ./PeppolBIS3/*
+rm -rf ./PeppolBIS3
+mkdir PeppolBIS3
 mv ./temp/peppolBis3/rules/sch ./PeppolBIS3/
 rm -rf ./temp/peppolBis3
 
 
 # clone Zugferd
 git clone https://github.com/ZUGFeRD/ZUV.git ./temp/Zugferd
-rm -rf ./Zugferd/*
+rm -rf ./Zugferd
+mkdir Zugferd
 mv ./temp/Zugferd/src/main/resources/xslt ./Zugferd
 rm -rf ./temp/Zugferd
 
