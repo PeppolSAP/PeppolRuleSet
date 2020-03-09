@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 git stash
-git checkout master
+git fetch -a
+git checkout origin/info -b info
 git branch -D fetchAll
 rm -rf temp/*
 git checkout -b fetchAll
@@ -37,16 +38,16 @@ git add .
 git commit -m "Initilial Commit"
 
 
-git diff  --quiet HEAD master -- ./xRechnung
+git diff  --quiet HEAD info -- ./xRechnung
 xrFlag=$?
 
-git diff  --quiet HEAD master -- ./simpler-invoicing
+git diff  --quiet HEAD info -- ./simpler-invoicing
 siFlag=$?
 
-git diff --quiet HEAD master -- ./PeppolBIS3
+git diff --quiet HEAD info -- ./PeppolBIS3
 pBis3Flag=$?
 
-git diff --quiet HEAD master -- ./Zugferd
+git diff --quiet HEAD info -- ./Zugferd
 zuvFlag=$?
 
 commitTitle='Peppol Rules Update Summary:'
