@@ -1,8 +1,6 @@
 #!/usr/bin/env sh
 git stash
 git fetch -a
-git checkout origin/info -b info
-git branch -D fetchAll
 rm -rf temp/*
 git checkout -b fetchAll
 
@@ -72,4 +70,10 @@ if [ $zuvFlag -eq 1 ]; then
   commitZuv="Zugferd Updated --> https://github.com/ZUGFeRD/ZUV.git"
 fi
 
+echo $commitSi
+echo $commitXr
+echo $commitPBis3
+
 git commit --amend -m "${commitTitle}" -m "${commitSi}" -m "${commitXr}" -m "${commitPBis3}" -m "${commitZuv}"
+
+git log -1
