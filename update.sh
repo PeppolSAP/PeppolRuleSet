@@ -28,13 +28,19 @@ mkdir PeppolBIS3
 mv ./temp/peppolBis3/rules/sch ./PeppolBIS3/
 rm -rf ./temp/peppolBis3
 
-
 # clone Zugferd
 git clone https://github.com/ZUGFeRD/ZUV.git ./temp/Zugferd
 rm -rf ./Zugferd
 mkdir Zugferd
 mv ./temp/Zugferd/src/main/resources/xslt ./Zugferd
 rm -rf ./temp/Zugferd
+
+# clone test sets
+git clone https://github.com/LeiSun-1101/PeppolTestRuleSet.git ./temp/test
+rm -rf ./TestSets
+mkdir TestSets
+mv ./temp/test/sch ./TestSets/
+rm -rf ./temp/test
 
 git add .
 git commit -m "Initilial Commit"
@@ -51,6 +57,9 @@ pBis3Flag=$?
 
 git diff --quiet HEAD info -- ./Zugferd
 zuvFlag=$?
+
+git diff --quiet HEAD info -- ./TestSets
+testFlag=$?
 
 commitTitle='Peppol Rules Update Summary:'
 commitSi=''
@@ -79,6 +88,11 @@ if [ $zuvFlag -eq 1 ]; then
   flag=1
 fi
 
+if [ $testFlag -eq 1 ]; then
+  commitTest="Test Sets Updated --> https://github.com/LeiSun-1101/PeppolTestRuleSet.git"
+  flag=1
+fi
+
 if [ $flag -eq 1 ]; then
-    git commit --amend -m "${commitTitle}" -m "${commitSi}" -m "${commitXr}" -m "${commitPBis3}" -m "${commitZuv}"
+    git commit --amend -m "${commitTitle}" -m "${commitSi}" -m "${commitXr}" -m "${commitPBis3}" -m "${commitZuv}"  -m "${commitTest}"
 fi
