@@ -3,7 +3,5 @@ language: bash
 script:
   - bash update.sh
 after_success:
-  - git config user.email "travis@travis.org"
-  - git config user.name "travis"
-  - git push https://9c062481599548a9b23ea8ad9b3acd2585720ecb@github.com/LeiSun-1101/PeppolRuleSet.git HEAD:master
+  - git push https://4adeeb70f6236f8cc41e6f8ed5476b6332008c92@github.com/LeiSun-1101/PeppolRuleSet.git HEAD:master
 
