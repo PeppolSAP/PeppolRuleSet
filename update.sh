@@ -61,7 +61,7 @@ zuvFlag=$?
 git diff --quiet HEAD info -- ./TestSets
 testFlag=$?
 
-commitTitle='Peppol Rules Update Summary:'
+commitTitle='Peppol Rulesets for schematron have been changed:'
 commitSi=''
 commitXr=''
 commitPBis3=''
