@@ -18,15 +18,13 @@
        Since all rules fall under one of these two, we make two general
        context shortcuts:
        1. '$si' for any supplier
-       2. '$sinl' for suppliers in the netherlands
+       2. '$s' for suppliers in the netherlands
   -->
+  <let name="si" value="($is_SI-UBL-2.0 or $is_SI-UBL-2.0-ext-gaccount)" />
   <let name="s" value="$supplierIsNL and ($is_SI-UBL-2.0 or $is_SI-UBL-2.0-ext-gaccount)" />
 
-
-
-
   <rule context="cac:AccountingSupplierParty/cac:Party[$s]">
-    <assert id="BR-NL-1" test="contains(concat(' ', string-join(cac:PartyLegalEntity/cbc:CompanyID/@schemeID, ' '), ' '), ' 0106 ') or contains(concat(' ', string-join(cac:PartyLegalEntity/cbc:CompanyID/@schemeID, ' '), ' '), ' 0190 ')" flag="fatal">[BR-NL-1] For suppliers in the Netherlands the supplier MUST provide either a KVK or OIN number for its legal entity identifier (cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID with schemeID 0106 or 0190)</assert>
+    <assert id="BR-NL-1" test="(contains(concat(' ', string-join(cac:PartyLegalEntity/cbc:CompanyID/@schemeID, ' '), ' '), ' 0106 ') or contains(concat(' ', string-join(cac:PartyLegalEntity/cbc:CompanyID/@schemeID, ' '), ' '), ' 0190 ')) and (cac:PartyLegalEntity/cbc:CompanyID/normalize-space(.) != '')" flag="fatal">[BR-NL-1] For suppliers in the Netherlands the supplier MUST provide either a KVK or OIN number for its legal entity identifier (cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID with schemeID 0106 or 0190)</assert>
   </rule>
   <rule context="/*[$s]">
     <assert id="BR-NL-2" test="(cbc:BuyerReference) or (cac:OrderReference/cbc:ID)" flag="fatal">[BR-NL-2] For suppliers in the Netherlands, the invoice MUST contain either the buyer reference (cbc:BuyerReference) or the order reference (cac:OrderReference/cbc:ID)</assert>
@@ -63,11 +61,12 @@
   </rule>
   <rule context="cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity[$s]">
     <assert id="BR-NL-10" test="
-        not(//cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'NL')
-        or
-        contains(concat(' ', string-join(//cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID, ' '), ' '), ' 0106 ')
-        or
-        contains(concat(' ', string-join(//cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID, ' '), ' '), ' 0190 ')
+        (not(//cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'NL')
+         or
+         contains(concat(' ', string-join(//cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID, ' '), ' '), ' 0106 ')
+         or
+         contains(concat(' ', string-join(//cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID, ' '), ' '), ' 0190 ')
+        ) and (not(cbc:CompanyID) or (cbc:CompanyID/normalize-space(.) != ''))
     " flag="fatal">[BR-NL-10] For suppliers in the Netherlands, if the customer is in the Netherlands, the customer's legal entity identifier (cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID) MUST be either a KVK (schemeID=0106) or OIN number (schemeID=0190)</assert>
   </rule>
   <rule context="cac:LegalMonetaryTotal[$s]">
@@ -87,6 +86,13 @@
     <!-- should move BR-NL-32 to its own context too, then add BR-NL-34 there -->
 
   </rule>
+
+  <!-- //Invoice/cac:OrderReference/cbc:ID -->
+  <rule context="cac:OrderLineReference/cbc:LineID[$si]">
+    <assert id="BR-NL-13" test="exists(/*/cac:OrderReference/cbc:ID)" flag="fatal">[BR-NL-13] If an order line reference (BT-132) is used, there must be an order reference on the document level (BT-13)</assert>
+  </rule>
+
+
   <!--
        Recommendations specific for NL
        Invoices that fail these rules result in warnings, but should not be rejected
@@ -167,4 +173,9 @@
   <rule context="cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cbc:TaxExemptionReasonCode[$s]">
     <assert id="BR-NL-35" test="false" flag="warning">[BR-NL-35] The use of a tax exemption reason code (cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cbc:TaxExemptionReasonCode) is not recommended</assert>
   </rule>
+
+  <rule context="//*[not(*) and not(normalize-space())]">
+    <assert id="SI-UBL-2" test="false()" flag="warning">Document should not contain empty elements.</assert>
+  </rule>
+
 </pattern>
