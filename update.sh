@@ -2,12 +2,11 @@
 git stash
 git fetch -a
 rm -rf temp/*
-git checkout -b fetchAll
 
 # clone simpler invocing repository
 git clone https://github.com/SimplerInvoicing/validation.git ./temp/si
 rm -rf ./simpler-invoicing
-mkdir ./simpler-invocing
+mkdir ./simpler-invoicing
 mv ./temp/si/schematron ./simpler-invoicing/
 mv ./temp/si/xsl ./simpler-invoicing/
 rm -rf ./temp/si
@@ -35,6 +34,14 @@ mkdir Zugferd
 mv ./temp/Zugferd/src/main/resources/xslt ./Zugferd
 rm -rf ./temp/Zugferd
 
+# clone SG
+git clone https://github.com/SG-PEPPOL/SG-PEPPOL-Specifications.git ./temp/SG
+rm -rf ./SG
+mkdir SG
+mv ./temp/SG/"SG PEPPOL BIS Billing 3"/"Presentation Stylesheet" ./SG
+mv ./temp/SG/"SG PEPPOL BIS Billing 3"/Schematron ./SG
+rm -rf ./temp/SG
+
 # clone test sets
 git clone https://github.com/LeiSun-1101/PeppolTestRuleSet.git ./temp/test
 rm -rf ./TestSets
@@ -57,6 +64,9 @@ pBis3Flag=$?
 
 git diff --quiet HEAD info -- ./Zugferd
 zuvFlag=$?
+
+git diff --quiet HEAD info -- ./SG
+sgFlag=$?
 
 git diff --quiet HEAD info -- ./TestSets
 testFlag=$?
@@ -88,11 +98,16 @@ if [ $zuvFlag -eq 1 ]; then
   flag=1
 fi
 
+if [ $sgFlag -eq 1 ]; then
+  commitSG="Singapore Schematron Updated --> https://github.com/LeiSun-1101/PeppolTestRuleSet.git"
+  flag=1
+fi
+
 if [ $testFlag -eq 1 ]; then
   commitTest="Test Sets Updated --> https://github.com/LeiSun-1101/PeppolTestRuleSet.git"
   flag=1
 fi
 
 if [ $flag -eq 1 ]; then
-    git commit --amend -m "${commitTitle}" -m "${commitSi}" -m "${commitXr}" -m "${commitPBis3}" -m "${commitZuv}"  -m "${commitTest}"
+    git commit --amend -m "${commitTitle}" -m "${commitSi}" -m "${commitXr}" -m "${commitPBis3}" -m "${commitZuv}" -m "${commitSG}" -m "${commitTest}"
 fi
