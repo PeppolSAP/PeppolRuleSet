@@ -2,6 +2,7 @@
 git stash
 git fetch -a
 rm -rf temp/*
+git checkout -b fetchAll
 
 # clone simpler invocing repository
 git clone https://github.com/SimplerInvoicing/validation.git ./temp/si
