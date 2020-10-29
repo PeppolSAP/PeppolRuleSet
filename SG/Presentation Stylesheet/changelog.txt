@@ -1,0 +1,6 @@
+﻿Change-log Stylesheet SG_1.0.0
+
+Deviations from SFTI Stylesheet v 1.0.5 regarding replacement of BT-codes to GST specific BT-codes.
+Replacement of "VAT" to "GST" in cac:Party/cac:PartyTaxScheme/cac:TaxScheme/cbc:ID for differentiating between BT-31-GST and BT-32.
+Added codes to UBLTaxCategoryCode_sg accoding to SG PEPPOL BIS Billing 3 chapter 6.3
+Replaced Header and fotter information to reflect SG implementation.
