@@ -13,10 +13,16 @@
   <ns prefix="ubl" uri="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" />
   <ns prefix="xs" uri="http://www.w3.org/2001/XMLSchema" />
 
+
   <phase id="xrechnung-model">
+    <active pattern="variable-pattern" />
     <active pattern="model-pattern" />
     <active pattern="ubl-extension-pattern" />
   </phase>
+  
+   
+  <include href="../common.sch" />
+  
   <!-- Abstract patterns -->
   <!-- ========================= -->
   <include href="abstract/XRechnung-model.sch" />
@@ -60,7 +66,7 @@
       
       <!-- BR-DEX-03
          this rule checks the existence of cac:Item/cac:ClassifiedTaxCategory in every sub invoice line -->
-      <assert test="count(//cac:SubInvoiceLine/cac:Item/cac:ClassifiedTaxCategory) = count(//cac:SubInvoiceLine)"
+      <assert test="not(exists(//cac:SubInvoiceLine/cac:Item[ count ( cac:ClassifiedTaxCategory) != 1]))"
         flag="fatal" id="BR-DEX-03"
         >[BR-DEX-03] Eine Sub Invoice Line (BG-DEX-01) muss genau eine "SUB INVOICE LINE VAT INFORMATION" (BG-DEX-06) enthalten.</assert>
     </rule>
