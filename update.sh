@@ -5,7 +5,7 @@ rm -rf temp/*
 git checkout -b fetchAll
 
 # clone simpler invocing repository
-git clone https://github.com/SimplerInvoicing/validation.git ./temp/si
+git clone https://github.com/peppolautoriteit-nl/validation ./temp/si
 rm -rf ./simpler-invoicing
 mkdir ./simpler-invoicing
 mv ./temp/si/schematron ./simpler-invoicing/
