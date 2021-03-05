@@ -13,13 +13,19 @@ mv ./temp/si/xsl ./simpler-invoicing/
 rm -rf ./temp/si
 
 
-# clone xRechnung
+# clone xRechnung schematron
 rm -rf ./xRechnung
 mkdir xRechnung
 git clone https://github.com/itplr-kosit/xrechnung-schematron.git ./temp/xRechnung
 mv ./temp/xRechnung/validation/schematron ./xRechnung
 rm -rf ./temp/xRechnung
 
+# clone xRechnung- visualization
+rm -rf ./xRechnung-xsl
+mkdir xRechnung-xsl
+git clone https://github.com/itplr-kosit/xrechnung-visualization.git ./temp/xRechnung-xsl
+mv ./temp/xRechnung-xsl/src/xsl ./xRechnung-xsl
+rm -rf ./temp/xRechnung-xsl
 
 # clone peppol-bis
 git clone https://github.com/OpenPEPPOL/peppol-bis-invoice-3.git ./temp/peppolBis3
@@ -57,6 +63,9 @@ git commit -m "Initilial Commit"
 git diff  --quiet HEAD info -- ./xRechnung
 xrFlag=$?
 
+git diff  --quiet HEAD info -- ./xRechnung-xsl
+xrxslFlag=$?
+
 git diff  --quiet HEAD info -- ./simpler-invoicing
 siFlag=$?
 
@@ -75,6 +84,7 @@ testFlag=$?
 commitTitle='Peppol Rulesets for schematron have been changed:'
 commitSi=''
 commitXr=''
+commitXrXsl=''
 commitPBis3=''
 commitZuv=''
 flag=0
@@ -86,6 +96,11 @@ fi
 
 if [ $xrFlag -eq 1 ]; then
   commitXr="xRechnung Updated --> https://github.com/itplr-kosit/xrechnung-schematron.git"
+  flag=1
+fi
+
+if [ $xrxslFlag -eq 1 ]; then
+  commitXrXsl="xRechnung-xsl Updated --> https://github.com/itplr-kosit/xrechnung-visualization.git"
   flag=1
 fi
 
@@ -110,5 +125,5 @@ if [ $testFlag -eq 1 ]; then
 fi
 
 if [ $flag -eq 1 ]; then
-    git commit --amend -m "${commitTitle}" -m "${commitSi}" -m "${commitXr}" -m "${commitPBis3}" -m "${commitZuv}" -m "${commitSG}" -m "${commitTest}"
+    git commit --amend -m "${commitTitle}" -m "${commitSi}" -m "${commitXr}" -m "${commitXrXsl}" -m "${commitPBis3}" -m "${commitZuv}" -m "${commitSG}" -m "${commitTest}"
 fi
