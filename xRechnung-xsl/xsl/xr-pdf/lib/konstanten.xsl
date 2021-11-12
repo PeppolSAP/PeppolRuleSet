@@ -5,16 +5,18 @@
                	xmlns:xr="urn:ce.eu:en16931:2017:xoev-de:kosit:standard:xrechnung-1"
                	xmlns:xs="http://www.w3.org/2001/XMLSchema"
                	xmlns:xrv="http://www.example.org/XRechnung-Viewer"
+               	xmlns:xrf="https://projekte.kosit.org/xrechnung/xrechnung-visualization/functions"                 	
                	version="2.0">
 
   <!-- ==========================================================================
   == Schriften
   =========================================================================== -->
 
-  <xsl:variable name="fontSans">BundesSans</xsl:variable>
-  <xsl:variable name="fontSerif">BundesSerif</xsl:variable>
+  <xsl:variable name="fontSans">SourceSerifPro</xsl:variable>
+  <xsl:variable name="fontSerif">SourceSerifPro</xsl:variable>
 
-  <xsl:variable name="amount-picture" select="'###.##0,00'"/>
+  <xsl:variable name="amount-picture" select="xrf:_('amount-format')"/>
+  <xsl:variable name="percentage-picture" select="xrf:_('percentage-format')"/>
 
   
   <!-- ==========================================================================

@@ -12,7 +12,6 @@
        == Imports
        =========================================================================== -->
   
-  <xsl:import href="xr-mapping.xsl"/>
   <xsl:import href="xr-content.xsl"/>
 
   <xsl:import href="xr-pdf/lib/konstanten.xsl"/>
@@ -20,6 +19,7 @@
   <xsl:import href="xr-pdf/lib/structure/content-templates.xsl"/>
   <xsl:import href="xr-pdf/lib/structure/page-sequence.xsl"/>
 
+  <xsl:include href="functions.xsl"/>
 
   <xsl:output method="xml" version="1.0" encoding="utf-8" /> 
 
@@ -59,8 +59,21 @@
        =========================================================================== -->
   <xsl:template match="xr:invoice">
 
-    <fo:root language="de">
+    <fo:root language="{$lang}" font-family="{$fontSans}">
       <xsl:call-template name="generiere-layout-master-set"/>
+      <fo:declarations>
+        <x:xmpmeta xmlns:x="adobe:ns:meta/">
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+            <rdf:Description rdf:about="" xmlns:dc="http://purl.org/dc/elements/1.1/">
+              <dc:title><xsl:value-of select="xr:Invoice_number"/></dc:title>
+              <!--
+              <dc:creator></dc:creator>
+              <dc:description></dc:description>
+              -->
+            </rdf:Description>
+          </rdf:RDF>
+        </x:xmpmeta>
+      </fo:declarations>
       <xsl:call-template name="generiere-page-sequence">
         <xsl:with-param name="body-content-flow">
           <fo:flow flow-name="xrBody"
