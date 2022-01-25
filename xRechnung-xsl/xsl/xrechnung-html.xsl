@@ -25,11 +25,7 @@
         <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1.0" />
         <style>
           <xsl:value-of select="unparsed-text('xrechnung-viewer.css')" />
-        </style>
-          <!-- according to https://stackoverflow.com/questions/436411/where-should-i-put-script-tags-in-html-markup -->
-          <script>
-              <xsl:value-of select="unparsed-text('xrechnung-viewer.js')" />
-          </script>          
+        </style>       
       </head>
       <body>
         <div role="main">
@@ -81,6 +77,10 @@
         </div>
 
       </body>
+      <!-- according to https://stackoverflow.com/questions/436411/where-should-i-put-script-tags-in-html-markup -->
+      <script>
+        <xsl:value-of select="unparsed-text('xrechnung-viewer.js')" />
+      </script>   
     </html>
   </xsl:template>
 
@@ -1820,7 +1820,7 @@
         </div>
         <div class="boxzeile" role="listitem">
           <div class="boxdaten legende">
-            <xsl:value-of select="xrf:_('Lieferdatum')" />:
+            <xsl:value-of select="xrf:_('xr:Actual_delivery_date')" />:
           </div>
           <div data-title="BT-72" class="BT-72 boxdaten wert">
             <xsl:value-of select="format-date(xr:Actual_delivery_date,xrf:_('date-format'))" />
