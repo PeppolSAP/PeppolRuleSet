@@ -103,7 +103,16 @@
       <xsl:with-param name="content">
         <xsl:apply-templates select="xr:Invoice_number" mode="list-entry"/>
         <xsl:apply-templates select="xr:Invoice_issue_date" mode="list-entry">
-          <xsl:with-param name="value" select="format-date(xr:Invoice_issue_date, xrf:_('date-format'))"/>
+          <xsl:with-param name="value" select="if (matches(
+            normalize-space(
+            replace(xr:Invoice_issue_date, '-', '')
+            ),
+            $datepattern)
+            )
+            then
+            format-date(xr:Invoice_issue_date, xrf:_('date-format'))
+            else
+            xr:Invoice_issue_date/text()"/>
         </xsl:apply-templates>
         <xsl:apply-templates select="xr:Invoice_type_code" mode="list-entry"/>
         <xsl:apply-templates select="xr:Invoice_currency_code" mode="list-entry"/>
@@ -209,7 +218,9 @@
               <xsl:apply-templates mode="value-list-entry" select="xr:VAT_category_taxable_amount">
                 <xsl:with-param name="value" select="format-number(xr:VAT_category_taxable_amount,$amount-picture,$lang)"/>
               </xsl:apply-templates>
-              <xsl:apply-templates mode="value-list-entry" select="xr:VAT_category_rate"/>
+              <xsl:apply-templates mode="value-list-entry" select="xr:VAT_category_rate">
+                <xsl:with-param name="value" select="concat(format-number(xr:VAT_category_rate,$percentage-picture,$lang), '%')"/>
+              </xsl:apply-templates>
               <xsl:apply-templates mode="sum-list-entry" select="xr:VAT_category_tax_amount">
                 <xsl:with-param name="value" select="format-number(xr:VAT_category_tax_amount,$amount-picture,$lang)"/>
               </xsl:apply-templates>
@@ -406,25 +417,25 @@
                       <fo:block>#</fo:block>
                     </fo:table-cell>
                     <fo:table-cell>
-                      <fo:block><xsl:value-of select="xrf:_('Beschreibung')"/></fo:block>
+                      <fo:block><xsl:value-of select="xrf:_('_description')"/></fo:block>
                     </fo:table-cell>
                     <fo:table-cell text-align="center">
                       <fo:block><xsl:value-of select="xrf:_('xr:Invoiced_quantity')"/></fo:block>
                     </fo:table-cell>
                     <fo:table-cell text-align="right" padding-right="1em">
-                      <fo:block><xsl:value-of select="xrf:_('Preis')"/></fo:block>
+                      <fo:block><xsl:value-of select="xrf:_('_price')"/></fo:block>
                     </fo:table-cell>
                     <fo:table-cell text-align="center">
-                      <fo:block><xsl:value-of select="xrf:_('Preis Einheit')"/></fo:block>
+                      <fo:block><xsl:value-of select="xrf:_('_price-unit')"/></fo:block>
                     </fo:table-cell>
                     <fo:table-cell text-align="center">
-                      <fo:block><xsl:value-of select="xrf:_('MwSt.')"/></fo:block>
+                      <fo:block><xsl:value-of select="xrf:_('_vat')"/></fo:block>
                     </fo:table-cell>
                     <fo:table-cell text-align="center">
-                      <fo:block><xsl:value-of select="xrf:_('St. Code')"/></fo:block>
+                      <fo:block><xsl:value-of select="xrf:_('_tax-code')"/></fo:block>
                     </fo:table-cell>
                     <fo:table-cell text-align="right">
-                      <fo:block><xsl:value-of select="xrf:_('Gesamt')"/></fo:block>
+                      <fo:block><xsl:value-of select="xrf:_('_total')"/></fo:block>
                     </fo:table-cell>
                   </fo:table-row>
                 </fo:table-header>      
@@ -514,7 +525,7 @@
             <xsl:apply-templates mode="list-entry" select="xr:PRICE_DETAILS/xr:Item_price_base_quantity_unit_of_measure"/>
             <xsl:apply-templates mode="list-entry" select="xr:LINE_VAT_INFORMATION/xr:Invoiced_item_VAT_category_code"/>
             <xsl:apply-templates mode="list-entry" select="xr:LINE_VAT_INFORMATION/xr:Invoiced_item_VAT_rate">
-            <xsl:with-param name="value" select="format-number(xr:LINE_VAT_INFORMATION/xr:Invoiced_item_VAT_rate,$percentage-picture,$lang)"/>
+              <xsl:with-param name="value" select="concat(format-number(xr:LINE_VAT_INFORMATION/xr:Invoiced_item_VAT_rate,$percentage-picture,$lang), '%')"/>
             </xsl:apply-templates>
           </xsl:with-param>
         </xsl:call-template>
@@ -622,7 +633,7 @@
     <xsl:call-template name="list">
       <xsl:with-param name="headingId" select="'detailsPositionArtikeleigenschaften'"/>
       <xsl:with-param name="content">
-        <xsl:apply-templates select="xr:ITEM_ATTRIBUTES"/>
+        <xsl:apply-templates select="xr:ITEM_INFORMATION/xr:ITEM_ATTRIBUTES"/>
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
@@ -731,7 +742,7 @@
           <xsl:with-param name="content">            
             <xsl:apply-templates mode="list-entry" select="xr:DELIVERY_INFORMATION/xr:Deliver_to_location_identifier"/>
             <xsl:apply-templates mode="list-entry" select="xr:DELIVERY_INFORMATION/xr:Deliver_to_location_identifier/@scheme_identifier">
-              <xsl:with-param name="field-mapping-identifier" select="xr:Deliver_to_location_identifier/@scheme_identifier"/>
+              <xsl:with-param name="field-mapping-identifier" select="'xr:Deliver_to_location_identifier/@scheme_identifier'"/>
             </xsl:apply-templates>
             <xsl:apply-templates mode="list-entry" select="xr:DELIVERY_INFORMATION/xr:Actual_delivery_date">
               <xsl:with-param name="value" select="format-date(xr:DELIVERY_INFORMATION/xr:Actual_delivery_date, xrf:_('date-format'))"/>
@@ -820,8 +831,7 @@
                     </xsl:with-param>
                   </xsl:apply-templates>
                   <xsl:apply-templates mode="list-entry" select="xr:Attached_document">
-                    <xsl:with-param name="value">
-                      <xsl:apply-templates mode="file-link" select="xr:Supporting_document_reference"/>
+                    <xsl:with-param name="value">                      
                       <xsl:apply-templates mode="binary" select="xr:Attached_document">
                         <xsl:with-param name="identifier" select="xr:Supporting_document_reference"/>
                       </xsl:apply-templates>

@@ -6,6 +6,7 @@
                	          xmlns:xs="http://www.w3.org/2001/XMLSchema"
                	          xmlns:xrv="http://www.example.org/XRechnung-Viewer"
                	          xmlns:xrf="https://projekte.kosit.org/xrechnung/xrechnung-visualization/functions"
+                          xmlns:pdf="http://xmlgraphics.apache.org/fop/extensions/pdf"
 	        version="2.0">
 
 
@@ -288,7 +289,7 @@
 
 
   <xsl:template match="*|@*" mode="value-list-entry">
-    <xsl:param name="value"/>
+    <xsl:param name="value"/>    
     <xsl:param name="field-mapping-identifier">
       <xsl:value-of select="name()"/>
     </xsl:param>
@@ -307,10 +308,10 @@
               <xsl:when test="$value">
                 <xsl:value-of select="$value"/>
               </xsl:when>
-              <xsl:otherwise>
+              <xsl:otherwise>                
                 <xsl:value-of select="."/>
               </xsl:otherwise>
-            </xsl:choose>
+            </xsl:choose>           
           </fo:block>
         </fo:table-cell>
       </fo:table-row>
@@ -378,7 +379,19 @@
   </xsl:template>
 
   <xsl:template match="*|@*" mode="binary">
-    <xsl:param name="identifier"/>
+    <xsl:param name="identifier"/>    
+    <fo:basic-link>
+      <xsl:attribute name="external-destination">url(embedded-file:<xsl:value-of select="$identifier"/>)</xsl:attribute>
+      <xsl:value-of select="$identifier"/>
+    </fo:basic-link>
+  </xsl:template>
+
+  <xsl:template match="*|@*" mode="binary-declaration">
+    <xsl:param name="identifier"/>   
+      <pdf:embedded-file>
+        <xsl:attribute name="filename"><xsl:value-of select="$identifier"/></xsl:attribute>
+        <xsl:attribute name="src">data:application/pdf;base64,<xsl:value-of select="."/></xsl:attribute>
+      </pdf:embedded-file> 
   </xsl:template>
 
   <!-- ==========================================================================
